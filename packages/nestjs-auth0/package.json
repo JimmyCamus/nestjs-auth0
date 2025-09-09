@@ -1,12 +1,23 @@
 {
-  "name": "nestjs-auth0",
+  "name": "@jimmycamus/nestjs-auth0",
   "license": "MIT",
-  "version": "0.0.0",
-  "private": false,
+  "version": "1.0.0",
   "main": "./dist/index.js",
-  "types": "./lib/index.ts",
+  "types": "./dist/index.d.ts",
+  "description": "Auth0 integration for NestJS applications.",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JimmyCamus/nestjs-auth0/tree/main/packages/nestjs-auth0"
   },
   "scripts": {
     "test": "jest",
@@ -30,6 +41,11 @@
     "jest-mock": "29.6.3",
     "ts-jest": "29.1.1",
     "typescript": "5.2.2"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">=9.0.0",
+    "@nestjs/core": ">=9.0.0",
+    "rxjs": ">=7.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

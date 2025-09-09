@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-auth0",
+  "name": "nestjs-auth0-monorepo",
   "private": true,
   "scripts": {
     "build": "turbo build --filter=nestjs-auth0",
