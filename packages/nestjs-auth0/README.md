@@ -1,6 +1,9 @@
-# nestjs-auth0
-
-Authentication and authorization for NestJS applications using Auth0.
+<div align="center">
+<img width="200" height="200" src="https://github.com/user-attachments/assets/45a27923-9073-47c6-b963-cdbc72cd2c6c" />
+<h1>nestjs-auth0</h1>
+  
+<p>Simple authentication and authorization for NestJS applications using Auth0. This package provides modules, decorators, and utilities to seamlessly integrate Auth0's OAuth2 flow into your controllers, handle callbacks, and access authenticated user data in a secure and transparent way. Ideal for projects that require social login, JWT, and user management with Auth0 in NestJS.</p>
+</div>
 
 ## Installation
 
