@@ -54,7 +54,7 @@ You don’t need to implement any logic in the handler — the interceptor will 
 
 ```typescript
 import { Controller, Get } from "@nestjs/common";
-import { Auth0Login } from "nestjs-auth0";
+import { Auth0Login } from "@jimmycamus/nestjs-auth0";
 
 @Controller()
 export class AppController {
@@ -78,7 +78,7 @@ This decorator will:
 ```typescript
 import { Controller, Get, Req } from "@nestjs/common";
 import { Request } from "express";
-import { Auth0Callback, WithAuth0User } from "nestjs-auth0";
+import { Auth0Callback, WithAuth0User } from "@jimmycamus/nestjs-auth0";
 
 @Controller()
 export class AppController {
@@ -94,7 +94,11 @@ export class AppController {
 
 ```typescript
 import { Controller, Get, Req } from "@nestjs/common";
-import { Auth0Callback, Auth0Login, WithAuth0User } from "nestjs-auth0";
+import {
+  Auth0Callback,
+  Auth0Login,
+  WithAuth0User,
+} from "@jimmycamus/nestjs-auth0";
 import { Request } from "express";
 
 @Controller()

@@ -1,7 +1,7 @@
 {
   "name": "@jimmycamus/nestjs-auth0",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "description": "Auth0 integration for NestJS applications.",
