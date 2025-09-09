@@ -2,9 +2,9 @@
   "name": "nestjs-auth0-monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo build --filter=nestjs-auth0",
+    "build": "turbo build --filter=@jimmycamus/nestjs-auth0",
     "dev": "pnpm i && pnpm build &&turbo run dev",
-    "test": "turbo run test --filter=nestjs-auth0",
+    "test": "turbo run test --filter=@jimmycamus/nestjs-auth0",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"

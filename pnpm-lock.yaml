@@ -20,6 +20,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@jimmycamus/nestjs-auth0':
+        specifier: workspace:*
+        version: link:../../packages/nestjs-auth0
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -32,9 +35,6 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.1.6(@nestjs/common@11.1.6)(@nestjs/core@11.1.6)
-      nestjs-auth0:
-        specifier: workspace:*
-        version: link:../../packages/nestjs-auth0
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2

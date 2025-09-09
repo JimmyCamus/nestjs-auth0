@@ -1,6 +1,10 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Auth0Callback, Auth0Login, WithAuth0User } from 'nestjs-auth0';
+import {
+  Auth0Callback,
+  Auth0Login,
+  WithAuth0User,
+} from '@jimmycamus/nestjs-auth0';
 import { Request } from 'express';
 
 @Controller()
