@@ -1,135 +1,123 @@
-# Turborepo starter
+<div align="center">
+<img width="200" height="200" src="https://github.com/user-attachments/assets/45a27923-9073-47c6-b963-cdbc72cd2c6c" />
+<h1>nestjs-auth0</h1>
+  
+<p>Simple authentication and authorization for NestJS applications using Auth0. This package provides modules, decorators, and utilities to seamlessly integrate Auth0's OAuth2 flow into your controllers, handle callbacks, and access authenticated user data in a secure and transparent way. Ideal for projects that require social login, JWT, and user management with Auth0 in NestJS.</p>
+</div>
 
-This Turborepo starter is maintained by the Turborepo core team.
+## Installation
 
-## Using this example
-
-Run the following command:
-
-```sh
-npx create-turbo@latest
+```bash
+pnpm add nestjs-auth0
 ```
 
-## What's inside?
+## Basic Usage
 
-This Turborepo includes the following packages/apps:
+```typescript
+import { Module } from "@nestjs/common";
+import { Auth0Module } from "nestjs-auth0";
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+@Module({
+  imports: [
+    Auth0Module.forRoot({
+      domain: "YOUR_AUTH0_DOMAIN",
+      clientId: "YOUR_AUTH0_CLIENT_ID",
+      clientSecret: "YOUR_AUTH0_CLIENT_SECRET",
+      redirectUri: "YOUR_AUTH0_REDIRECT_URI",
+    }),
+  ],
+})
+export class AppModule {}
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Asynchronous Configuration
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+```typescript
+Auth0Module.forRootAsync({
+  useFactory: async () => ({
+    domain: process.env.AUTH0_DOMAIN,
+    clientId: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    redirectUri: process.env.AUTH0_REDIRECT_URI,
+  }),
+});
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Using Decorators
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+This package provides decorators to simplify Auth0 integration inside your NestJS controllers.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+`@Auth0Login()`
 
-### Remote Caching
+Redirects the user to the Auth0 login page.
+You don’t need to implement any logic in the handler — the interceptor will handle the redirection.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+```typescript
+import { Controller, Get } from "@nestjs/common";
+import { Auth0Login } from "nestjs-auth0";
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+@Controller()
+export class AppController {
+  @Get("authorize")
+  @Auth0Login()
+  authorize() {
+    // No logic needed here, user will be redirected to Auth0
+  }
+}
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+`@Auth0Callback()`
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Handles the Auth0 callback after login.
+This decorator will:
 
+- Process the Auth0 callback.
+- Exchange the authorization code for an access token.
+- Attach the authenticated user to the request object.
+
+```typescript
+import { Controller, Get, Req } from "@nestjs/common";
+import { Request } from "express";
+import { Auth0Callback, WithAuth0User } from "nestjs-auth0";
+
+@Controller()
+export class AppController {
+  @Get("callback")
+  @Auth0Callback()
+  callback(@Req() req: WithAuth0User<Request>) {
+    return { userData: req.user };
+  }
+}
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+### Combined Example
+
+```typescript
+import { Controller, Get, Req } from "@nestjs/common";
+import { Auth0Callback, Auth0Login, WithAuth0User } from "nestjs-auth0";
+import { Request } from "express";
+
+@Controller()
+export class ExampleController {
+  constructor() {}
+
+  @Get("authorize")
+  @Auth0Login()
+  authorize() {}
+
+  @Get("callback")
+  @Auth0Callback()
+  callback(@Req() req: WithAuth0User<Request>) {
+    return { userData: req.user };
+  }
+}
 ```
 
-## Useful Links
+## Contributing
 
-Learn more about the power of Turborepo:
+Contributions are welcome!
+Open an issue or a PR to suggest new features and improvements.
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## License
+
+MIT
